@@ -17,6 +17,22 @@ module.exports = {
     },
     plugins: ['@typescript-eslint'],
     rules: {
-        // 'prettier/prettier': 'error',
+        'import/extensions': [
+            'error',
+            'ignorePackages',
+            {
+                js: 'never',
+                ts: 'never',
+                mjs: 'never',
+            },
+        ],
+        'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
+    },
+    settings: {
+        'import/resolver': {
+            node: {
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
+            },
+        },
     },
 };

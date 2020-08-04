@@ -1,0 +1,37 @@
+import { Request, Response, NextFunction } from 'express';
+import { verify } from 'jsonwebtoken';
+import CustomError from '../CustomError';
+import User, { IUser } from '../models/User';
+
+const SECRET = process.env.APP_SECRET || 'secret';
+
+/**
+ * ヘッダーよりJWTのトークンを取得して認証を行います。
+ * 認証したユーザー情報をrequestにセットします。
+ */
+const authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        // リクエストヘッダーからトークンを取得
+        const token = req.headers.authorization?.replace(/^Bearer\s/, '');
+        if (token) {
+            // トークンから認証情報を取得
+            const payload = verify(token, SECRET) as string;
+            const { id } = JSON.parse(payload) as IUser;
+            // idを元にユーザーを検索
+            const user = await User.findByPk(id);
+            req.user = user?.toJSON() as IUser;
+            next();
+            return;
+        }
+    } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(err);
+    }
+
+    // トークンが取得できない、トークンから認証情報を取得する
+    // 際に例外が発生した、などの場合は認証失敗とする
+    const ce = new CustomError('Unauthenticated', 401);
+    throw ce;
+};
+
+export default authenticate;

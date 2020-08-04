@@ -1,3 +1,49 @@
+## URL
+
+```
+アンケート一覧の取得: GET: /question
+アンケートの削除: DELETE: /question/{id}
+投票: POST: /question/{question_id}/choice/{choice_id}/vote
+
+ユーザー登録: POST: /signup
+ログイン: POST: /signin
+```
+
+## データ設計
+
+```
+questions
+    id: number
+    question: string
+    limit: date
+    created_by: number
+    created_at: date
+    updated_at: date
+
+choices
+    id: number
+    question_id: number
+    content: string
+    created_at: date
+    updated_at: date
+
+votes
+    id: number
+    question_id: number
+    choice_id: number
+    voted_by: number
+    created_at: number
+    updated_at: date
+
+users
+    id: number
+    name: string
+    password: string
+    created_at: date
+    updated_at: date
+```
+
+---
 
 ```sh
 > mkdir express-vote
@@ -67,6 +113,44 @@ hello%
 
 ---
 
+## Sequelize の導入
+
+Manual | Sequelize
+https://sequelize.org/v5/
+
+DBを準備する手間を省略するため、データは `sqlite` に格納
+
+```
+> npm install --save cors body-parser
+> npm install --save-dev @types/cors @types/body-parser
+> npm install --save sqlite3 sequelize
+> npm install --save-dev @types/sequelize @types/validator @types/bluebird
+> mkdir database
+> touch database/database.sqlite
+> mkdir src/{models,routes,controllers}
+> touch src/models/{index.ts,db.ts,Question.ts,Choice.ts,Vote.ts,User.ts}
+> touch src/routes/{index.ts,question.ts,auth.ts}
+> touch src/controllers/{index.ts,QuestionController.ts,LoginController.ts}
+```
+
+### dotenv
+
+```
+> npm install --save dotenv
+> npm install --save-dev @types/dotenv
+```
+
+### bcrypt
+
+```
+> npm install --save bcrypt
+> npm install --save-dev @types/bcrypt
+> npm install --save jsonwebtoken
+> npm install --save-dev @types/jsonwebtoken
+```
+
+
+
 
 ---
 
@@ -75,3 +159,44 @@ https://neos21.hatenablog.com/entry/2020/06/13/080000
 
 esModuleInterop オプションの必要性について - Qiita
 https://qiita.com/karak/items/29ff148788f5abb15331
+
+Express 4.x - API Reference
+http://expressjs.com/en/4x/api.html
+
+
+Node+TypeScript+ExpressでAPIサーバ構築 - Qiita
+https://qiita.com/pochopocho13/items/79a4735031ce11a91df7
+
+Manual | Sequelize
+https://sequelize.org/v5/manual/typescript.html
+
+
+typescript-express-sequelize/src at master · maximegris/typescript-express-sequelize
+https://github.com/maximegris/typescript-express-sequelize/tree/master/src
+
+Expressの冗長なエラー処理を簡潔にする - Qiita
+https://qiita.com/azujuuuuuun/items/f0be4a71aca2d92036aa
+
+sequelize v5とtypescript - Qiita
+https://qiita.com/pokotyan/items/776613d869eca99f6b7b
+
+Express error handling
+http://expressjs.com/en/guide/error-handling.html
+
+サルでも分かるExpressでのjsonAPIサーバーの作り方 - Qiita
+https://qiita.com/ngmr_mo/items/73cc7160d002a4989416#%E5%BF%85%E8%A6%81%E3%81%AA%E3%83%A9%E3%82%A4%E3%83%96%E3%83%A9%E3%83%AA%E3%81%AA%E3%81%A9%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB
+
+Node.js + Express + TypeScriptでWebAPIを作る（4/4） - Qiita
+https://qiita.com/s-yoshida/items/5ac5da205ea502f1a169
+
+JSON Web Token (JWT) - Node.js/TypeScript 関連 - Node.js 入門
+https://nodejs.keicode.com/nodejs/jwt.php
+
+Express で JWT を用いた認証を実装する方法 - Express - Node.js 入門
+https://nodejs.keicode.com/nodejs/express-jwtauth.php
+
+Bcryptを用いてパスワードをハッシュ化する (Node.js) - kkty’s blog
+https://blog.kkty.jp/entry/2019/04/13/082214
+
+JSON Web Token Introduction - jwt.io
+https://jwt.io/introduction/
