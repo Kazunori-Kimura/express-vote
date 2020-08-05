@@ -5,7 +5,7 @@ import authenticate from '../middlewares/authenticate';
 const router = Router();
 
 // GET: /question
-router.get('/question', authenticate, list);
+router.get('/question', list);
 // POST: /question
 router.post('/question', authenticate, create);
 // DELETE: /question/:id

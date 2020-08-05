@@ -1,6 +1,11 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from './db';
 
+export interface IVote {
+    id: number;
+    votedBy: number;
+}
+
 class Vote extends Model {}
 
 Vote.init(
