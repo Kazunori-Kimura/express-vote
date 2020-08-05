@@ -15,7 +15,22 @@ const SECRET = process.env.APP_SECRET || 'secret';
 export const signUp = async (req: Request, res: Response): Promise<void> => {
     try {
         // 入力内容を取得
-        const { email, name, password: rawPassword } = req.body;
+        const {
+            email,
+            name,
+            password: rawPassword,
+        }: {
+            email: string;
+            name: string;
+            password: string;
+        } = req.body;
+
+        // 入力値のいずれかが空なら 400 BadRequest で終了
+        if (email.length === 0 || name.length === 0 || rawPassword.length === 0) {
+            res.status(400).send('BadRequest');
+            return;
+        }
+
         // パスワードをハッシュ化
         const password = await hash(rawPassword, SALT_ROUNDS);
         // ユーザーアカウントの作成
@@ -26,9 +41,8 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
 
         res.status(201).json(payload);
     } catch (err) {
-        const e = err as Error;
         // エラーが発生
-        const ce = new CustomError(e.message, 400);
+        const ce = new CustomError(err.message, 500);
         throw ce;
     }
 };
@@ -40,7 +54,20 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
 export const signIn = async (req: Request, res: Response): Promise<void> => {
     try {
         // 入力内容を取得
-        const { email, password: rawPassword } = req.body;
+        const {
+            email,
+            password: rawPassword,
+        }: {
+            email: string;
+            password: string;
+        } = req.body;
+
+        // 入力値のいずれかが空なら 400 BadRequest で終了
+        if (email.length === 0 || rawPassword.length === 0) {
+            res.status(400).send('BadRequest');
+            return;
+        }
+
         // メールアドレスを元にユーザーを取得
         const user = await User.findOne({
             where: {
@@ -114,19 +141,14 @@ export const remove = async (req: Request, res: Response): Promise<void> => {
         const user = await User.findByPk(uid);
         if (user) {
             user.destroy();
-            res.status(204).send('No Content');
+            res.status(204).send('NoContent');
             return;
         }
 
-        const ce = new CustomError('NotFound', 404);
-        throw ce;
+        // 該当ユーザー無し
+        res.status(404).send('NotFound');
     } catch (err) {
-        if (err instanceof CustomError) {
-            throw err;
-        }
-
-        const e = err as Error;
-        const ce = new CustomError(e.message, 500);
+        const ce = new CustomError(err.message, 500);
         throw ce;
     }
 };

@@ -20,6 +20,7 @@ export const list = async (req: Request, res: Response): Promise<void> => {
                 },
             ],
         });
+
         res.json(questions.map((question) => question.toJSON()));
     } catch (err) {
         const ce = new CustomError(err.message, 500);
