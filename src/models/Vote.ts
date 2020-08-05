@@ -11,18 +11,6 @@ Vote.init(
             allowNull: false,
             primaryKey: true,
         },
-        questionId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        choiceId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        votedBy: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
     },
     {
         sequelize,

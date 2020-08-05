@@ -15,10 +15,6 @@ Choice.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        questionId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
     },
     {
         sequelize,

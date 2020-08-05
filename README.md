@@ -124,9 +124,8 @@ DBを準備する手間を省略するため、データは `sqlite` に格納
 > npm install --save cors body-parser
 > npm install --save-dev @types/cors @types/body-parser
 > npm install --save sqlite3 sequelize
-> npm install --save-dev @types/sequelize @types/validator @types/bluebird
+> npm install --save-dev @types/sequelize @types/validator @types/bluebird ts-node
 > mkdir database
-> touch database/database.sqlite
 > mkdir src/{models,routes,controllers}
 > touch src/models/{index.ts,db.ts,Question.ts,Choice.ts,Vote.ts,User.ts}
 > touch src/routes/{index.ts,question.ts,auth.ts}

@@ -26,10 +26,6 @@ Question.init(
             type: DataTypes.DATE,
             allowNull: false,
         },
-        createdBy: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
     },
     {
         sequelize,

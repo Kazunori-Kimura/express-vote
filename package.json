@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node ./dist/index.js",
     "dev": "ts-node-dev ./src/index.ts",
-    "build": "tsc ./src/index.ts --outDir ./dist --esModuleInterop"
+    "build": "tsc ./src/index.ts --outDir ./dist",
+    "migrate": "ts-node ./src/migrate.ts",
+    "test": "jest"
   },
   "keywords": [],
   "author": "kazunori kimura",
@@ -35,6 +37,7 @@
     "prettier": "^2.0.5",
     "supertest": "^4.0.2",
     "ts-jest": "^26.1.4",
+    "ts-node": "^8.10.2",
     "ts-node-dev": "^1.0.0-pre.56",
     "typescript": "^3.9.7"
   },
