@@ -206,3 +206,12 @@ https://blog.kkty.jp/entry/2019/04/13/082214
 
 JSON Web Token Introduction - jwt.io
 https://jwt.io/introduction/
+
+Jest · 🃏快適なJavaScriptのテスト
+https://jestjs.io/ja/
+
+visionmedia/supertest: 🕷Super-agent driven library for testing node.js HTTP servers using a fluent API.
+https://github.com/visionmedia/supertest
+
+Supertest authenticate with bearer token
+https://gist.github.com/bq1990/595c615970250e97f3ea
