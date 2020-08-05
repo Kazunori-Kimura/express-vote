@@ -47,6 +47,7 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
                 email,
             },
         });
+
         if (user) {
             // パスワードを検証
             const match = await compare(rawPassword, user.password);
@@ -54,7 +55,7 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
                 // token生成
                 const payload = user.toJSON() as IUser;
                 delete payload.password;
-                const token = sign(JSON.stringify(payload), SECRET, {
+                const token = sign(payload, SECRET, {
                     algorithm: 'HS256',
                     expiresIn: '30m',
                 });
@@ -65,15 +66,9 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
         }
 
         // 認証失敗
-        const ce = new CustomError('Bad Request', 400);
-        throw ce;
+        res.status(401).send('Unauthorized');
     } catch (err) {
-        if (err instanceof CustomError) {
-            throw err;
-        }
-
-        const e = err as Error;
-        const ce = new CustomError(e.message, 500);
+        const ce = new CustomError(err.message, 500);
         throw ce;
     }
 };
@@ -91,7 +86,7 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
                 // token生成
                 const payload = user.toJSON() as IUser;
                 delete payload.password;
-                const token = sign(JSON.stringify(payload), SECRET, {
+                const token = sign(payload, SECRET, {
                     algorithm: 'HS256',
                     expiresIn: '30m',
                 });
@@ -102,15 +97,9 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
         }
 
         // userが取得できないなどの理由でトークンが生成できない
-        const ce = new CustomError('Unauthenticated', 401);
-        throw ce;
+        res.status(401).send('Unauthorized');
     } catch (err) {
-        if (err instanceof CustomError) {
-            throw err;
-        }
-
-        const e = err as Error;
-        const ce = new CustomError(e.message, 500);
+        const ce = new CustomError(err.message, 500);
         throw ce;
     }
 };

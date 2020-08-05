@@ -15,8 +15,8 @@ const authenticate = async (req: Request, res: Response, next: NextFunction): Pr
         const token = req.headers.authorization?.replace(/^bearer\s/i, '');
         if (token) {
             // トークンから認証情報を取得
-            const payload = verify(token, SECRET) as string;
-            const { id } = JSON.parse(payload) as IUser;
+            const payload = verify(token, SECRET) as IUser;
+            const { id } = payload;
             // idを元にユーザーを検索
             const user = await User.findByPk(id);
             req.user = user?.toJSON() as IUser;

@@ -8,7 +8,7 @@
     "dev": "ts-node-dev ./src/index.ts",
     "build": "tsc ./src/index.ts --outDir ./dist",
     "migrate": "ts-node ./src/migrate.ts",
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
   },
   "keywords": [],
   "author": "kazunori kimura",
