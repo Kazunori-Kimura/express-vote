@@ -149,7 +149,14 @@ DBを準備する手間を省略するため、データは `sqlite` に格納
 > npm install --save-dev @types/jsonwebtoken
 ```
 
+## test
 
+```
+> npm install --save-dev jest ts-jest supertest @types/jest @types/supertest
+> mkdir test
+> touch test/{auth,question}.test.ts
+> npx ts-jest config:init
+```
 
 
 ---

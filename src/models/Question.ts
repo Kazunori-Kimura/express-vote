@@ -1,7 +1,5 @@
-import { Model, DataTypes, HasManyGetAssociationsMixin } from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 import sequelize from './db';
-import Choice from './Choice';
-import Vote from './Vote';
 
 class Question extends Model {
     public id!: number;
@@ -10,15 +8,12 @@ class Question extends Model {
     public createdBy!: number;
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
-
-    public getChoices!: HasManyGetAssociationsMixin<Choice>;
-    public getVotes!: HasManyGetAssociationsMixin<Vote>;
 }
 
 Question.init(
     {
         id: {
-            type: DataTypes.INTEGER.UNSIGNED,
+            type: DataTypes.INTEGER,
             autoIncrement: true,
             allowNull: false,
             primaryKey: true,
@@ -32,7 +27,7 @@ Question.init(
             allowNull: false,
         },
         createdBy: {
-            type: DataTypes.INTEGER.UNSIGNED,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
     },

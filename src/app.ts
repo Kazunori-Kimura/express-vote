@@ -1,12 +1,8 @@
-import { config } from 'dotenv';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { json, urlencoded } from 'body-parser';
 import { AuthRouter, QuestionRouter } from './routes';
 import CustomError from './CustomError';
-
-config();
-const PORT = process.env.PORT || 3080;
 
 const app = express();
 app.use(
@@ -27,6 +23,9 @@ app.use('/', QuestionRouter);
 
 // エラーハンドラ
 app.use((err: Error | CustomError, req: Request, res: Response) => {
+    // eslint-disable-next-line no-console
+    console.error(err);
+
     if (err instanceof CustomError) {
         res.status(err.statusCode).send(err.message);
     } else {
@@ -34,7 +33,4 @@ app.use((err: Error | CustomError, req: Request, res: Response) => {
     }
 });
 
-app.listen(PORT, () => {
-    // eslint-disable-next-line no-console
-    console.log(`starting localhost:${PORT}`);
-});
+export default app;

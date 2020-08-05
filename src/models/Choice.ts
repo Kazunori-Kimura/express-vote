@@ -6,7 +6,7 @@ class Choice extends Model {}
 Choice.init(
     {
         id: {
-            type: DataTypes.INTEGER.UNSIGNED,
+            type: DataTypes.INTEGER,
             autoIncrement: true,
             allowNull: false,
             primaryKey: true,
@@ -16,7 +16,7 @@ Choice.init(
             allowNull: false,
         },
         questionId: {
-            type: DataTypes.INTEGER.UNSIGNED,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
     },

@@ -13,7 +13,8 @@ export const list = async (req: Request, res: Response): Promise<void> => {
         });
         res.json(questions.map((item) => item.toJSON()));
     } catch (err) {
-        const ce = new CustomError(err.message, 500);
+        const e = err as Error;
+        const ce = new CustomError(e.message, 500);
         throw ce;
     }
 };
@@ -44,7 +45,8 @@ export const create = async (req: Request, res: Response): Promise<void> => {
 
         res.status(201).json(q.toJSON());
     } catch (err) {
-        const ce = new CustomError(err.message, 500);
+        const e = err as Error;
+        const ce = new CustomError(e.message, 500);
         throw ce;
     }
 };
@@ -70,7 +72,8 @@ export const remove = async (req: Request, res: Response): Promise<void> => {
             throw err;
         }
 
-        const ce = new CustomError(err.message, 500);
+        const e = err as Error;
+        const ce = new CustomError(e.message, 500);
         throw ce;
     }
 };
@@ -121,7 +124,8 @@ export const vote = async (req: Request, res: Response): Promise<void> => {
             throw err;
         }
 
-        const ce = new CustomError(err.message, 500);
+        const e = err as Error;
+        const ce = new CustomError(e.message, 500);
         throw ce;
     }
 };

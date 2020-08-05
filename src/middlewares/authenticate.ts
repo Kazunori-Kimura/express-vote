@@ -12,7 +12,7 @@ const SECRET = process.env.APP_SECRET || 'secret';
 const authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         // リクエストヘッダーからトークンを取得
-        const token = req.headers.authorization?.replace(/^Bearer\s/, '');
+        const token = req.headers.authorization?.replace(/^bearer\s/i, '');
         if (token) {
             // トークンから認証情報を取得
             const payload = verify(token, SECRET) as string;
