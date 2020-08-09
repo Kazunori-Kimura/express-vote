@@ -31,6 +31,17 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
+        // 登録済みのメールアドレスなら 409 Conflict
+        const u = await User.findAll({
+            where: {
+                email,
+            },
+        });
+        if (u.length > 0) {
+            res.status(409).send('Conflict');
+            return;
+        }
+
         // パスワードをハッシュ化
         const password = await hash(rawPassword, SALT_ROUNDS);
         // ユーザーアカウントの作成

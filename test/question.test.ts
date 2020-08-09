@@ -8,7 +8,7 @@ import { IVote } from '../src/models/Vote';
 // 認証情報
 const auth = {
     id: 0,
-    email: 'kimura-kazunori@example.com',
+    email: 'kimura-kazunori+question@example.com',
     name: 'Kimura Kazunori',
     password: 'secret',
     token: '',

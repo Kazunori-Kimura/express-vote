@@ -4,7 +4,7 @@ import { User } from '../src/models';
 
 const auth = {
     id: 0,
-    email: 'kimura-kazunori@example.com',
+    email: 'kimura-kazunori+auth@example.com',
     name: 'Kimura Kazunori',
     password: 'secret',
     token: '',
@@ -16,7 +16,7 @@ describe('POST: /signup', () => {
     beforeAll(async () => {
         const user = await User.findOne({ where: { email: auth.email } });
         if (user) {
-            user.destroy();
+            await user.destroy();
         }
     });
 
