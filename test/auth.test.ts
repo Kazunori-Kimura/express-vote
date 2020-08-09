@@ -53,6 +53,7 @@ describe('POST: /signin', () => {
         auth.token = response.body.token;
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty('token');
+        expect(response.body).toHaveProperty('name', auth.name);
     });
 });
 

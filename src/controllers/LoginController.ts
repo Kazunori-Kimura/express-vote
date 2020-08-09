@@ -98,7 +98,7 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
                     expiresIn: '30m',
                 });
                 // 結果を返却
-                res.json({ token });
+                res.json({ ...payload, token });
                 return;
             }
         }
