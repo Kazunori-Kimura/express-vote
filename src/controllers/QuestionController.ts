@@ -131,32 +131,41 @@ export const vote = async (req: Request, res: Response): Promise<void> => {
         const qid = parseInt(questionId, 10);
         const cid = parseInt(choiceId, 10);
 
+        const question = await Question.findByPk(qid);
         const choice = await Choice.findByPk(cid);
-        if (choice) {
-            const voted = await Vote.findOne({
-                where: {
-                    questionId: qid,
-                    votedBy: uid,
-                },
-            });
-            if (voted) {
-                // すでに投票済み
-                res.status(409).send('Conflict');
-                return;
-            }
-
-            const v = await Vote.create({
-                questionId: qid,
-                choiceId: cid,
-                votedBy: uid,
-            });
-
-            res.status(201).json(v.toJSON());
-        } else {
-            // 該当の選択肢が存在しない
+        if (question === null || choice === null) {
+            // 該当の質問/選択肢が存在しない
             res.status(404).send('NotFound');
             return;
         }
+
+        const now = Date.now();
+        const limitTime = new Date(question.limit).getTime();
+        if (limitTime < now) {
+            // 質問の期限切れ
+            res.status(400).send('Bad Request');
+            return;
+        }
+
+        const voted = await Vote.findOne({
+            where: {
+                questionId: qid,
+                votedBy: uid,
+            },
+        });
+        if (voted) {
+            // すでに投票済み
+            res.status(409).send('Conflict');
+            return;
+        }
+
+        const v = await Vote.create({
+            questionId: qid,
+            choiceId: cid,
+            votedBy: uid,
+        });
+
+        res.status(201).json(v.toJSON());
     } catch (err) {
         const ce = new CustomError(err.message, 500);
         throw ce;
