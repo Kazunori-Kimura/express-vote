@@ -19,6 +19,7 @@ export const list = async (req: Request, res: Response): Promise<void> => {
                     as: 'votes',
                 },
             ],
+            order: [['createdAt', 'DESC']],
         });
 
         res.json(questions.map((question) => question.toJSON()));
