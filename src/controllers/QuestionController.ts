@@ -1,12 +1,13 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import CustomError from '../CustomError';
 import { Question, Choice, Vote } from '../models';
+import { IUser } from '../models/User';
 
 /**
  * アンケートを全件返す
  * GET: /question
  */
-export const list = async (req: Request, res: Response): Promise<void> => {
+export const list = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const questions = await Question.findAll({
             include: [
@@ -25,7 +26,7 @@ export const list = async (req: Request, res: Response): Promise<void> => {
         res.json(questions.map((question) => question.toJSON()));
     } catch (err) {
         const ce = new CustomError(err.message, 500);
-        throw ce;
+        next(ce);
     }
 };
 
@@ -33,7 +34,7 @@ export const list = async (req: Request, res: Response): Promise<void> => {
  * アンケートの作成
  * POST: /question
  */
-export const create = async (req: Request, res: Response): Promise<void> => {
+export const create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         // bodyからデータを取得
         const {
@@ -46,14 +47,14 @@ export const create = async (req: Request, res: Response): Promise<void> => {
             choices: { content: string }[];
         } = req.body;
 
-        // ログインユーザーID
-        const userId = req.user?.id || 0;
+        // ログインユーザー
+        const loginUser = req.app.get('user') as IUser;
 
         // questionを作成
         const q = await Question.create({
             question,
             limit: new Date(limit),
-            createdBy: userId,
+            createdBy: loginUser.id,
         });
         // choiceを作成
         const questionId = q.id;
@@ -89,7 +90,7 @@ export const create = async (req: Request, res: Response): Promise<void> => {
         res.status(500).send('Unknown Error.');
     } catch (err) {
         const ce = new CustomError(err.message, 500);
-        throw ce;
+        next(ce);
     }
 };
 
@@ -97,7 +98,7 @@ export const create = async (req: Request, res: Response): Promise<void> => {
  * アンケートの削除
  * DELETE: /question/:id
  */
-export const remove = async (req: Request, res: Response): Promise<void> => {
+export const remove = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { id } = req.params;
         const questionId = parseInt(id, 10);
@@ -111,7 +112,7 @@ export const remove = async (req: Request, res: Response): Promise<void> => {
         }
     } catch (err) {
         const ce = new CustomError(err.message, 500);
-        throw ce;
+        next(ce);
     }
 };
 
@@ -119,9 +120,10 @@ export const remove = async (req: Request, res: Response): Promise<void> => {
  * 投票
  * POST: /question/{questionId}/choice/{choiceId}/vote
  */
-export const vote = async (req: Request, res: Response): Promise<void> => {
+export const vote = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const uid = req.user?.id || 0;
+        const user = req.app.get('user') as IUser;
+        const uid = user.id;
         if (uid === 0) {
             // ユーザーIDが取得できない
             res.status(401).send('Unauthorized');
@@ -169,6 +171,6 @@ export const vote = async (req: Request, res: Response): Promise<void> => {
         res.status(201).json(v.toJSON());
     } catch (err) {
         const ce = new CustomError(err.message, 500);
-        throw ce;
+        next(ce);
     }
 };

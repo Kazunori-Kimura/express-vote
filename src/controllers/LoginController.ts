@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { hash, compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { User } from '../models';
@@ -12,7 +12,7 @@ const SECRET = process.env.APP_SECRET || 'secret';
  * ユーザー登録
  * POST: /signup
  */
-export const signUp = async (req: Request, res: Response): Promise<void> => {
+export const signUp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         // 入力内容を取得
         const {
@@ -54,7 +54,7 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
     } catch (err) {
         // エラーが発生
         const ce = new CustomError(err.message, 500);
-        throw ce;
+        next(ce);
     }
 };
 
@@ -62,7 +62,7 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
  * ユーザー認証
  * POST: /signin
  */
-export const signIn = async (req: Request, res: Response): Promise<void> => {
+export const signIn = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         // 入力内容を取得
         const {
@@ -107,7 +107,7 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
         res.status(401).send('Unauthorized');
     } catch (err) {
         const ce = new CustomError(err.message, 500);
-        throw ce;
+        next(ce);
     }
 };
 
@@ -115,11 +115,12 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
  * JWTの更新
  * GET: /refresh
  */
-export const refresh = async (req: Request, res: Response): Promise<void> => {
+export const refresh = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        if (req.user) {
+        const loginUser = req.app.get('user') as IUser;
+        if (loginUser) {
             // idを元にユーザーを検索
-            const user = await User.findByPk(req.user.id);
+            const user = await User.findByPk(loginUser.id);
             if (user) {
                 // token生成
                 const payload = user.toJSON() as IUser;
@@ -138,14 +139,14 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
         res.status(401).send('Unauthorized');
     } catch (err) {
         const ce = new CustomError(err.message, 500);
-        throw ce;
+        next(ce);
     }
 };
 
 /**
  * ユーザーの削除
  */
-export const remove = async (req: Request, res: Response): Promise<void> => {
+export const remove = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { id } = req.params;
         const uid = parseInt(id, 10);
@@ -160,6 +161,6 @@ export const remove = async (req: Request, res: Response): Promise<void> => {
         res.status(404).send('NotFound');
     } catch (err) {
         const ce = new CustomError(err.message, 500);
-        throw ce;
+        next(ce);
     }
 };

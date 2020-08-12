@@ -19,7 +19,8 @@ const authenticate = async (req: Request, res: Response, next: NextFunction): Pr
             const { id } = payload;
             // idを元にユーザーを検索
             const user = await User.findByPk(id);
-            req.user = user?.toJSON() as IUser;
+            const data = user?.toJSON() as IUser;
+            req.app.set('user', data);
             next();
             return;
         }
@@ -31,7 +32,7 @@ const authenticate = async (req: Request, res: Response, next: NextFunction): Pr
     // トークンが取得できない、トークンから認証情報を取得する
     // 際に例外が発生した、などの場合は認証失敗とする
     const ce = new CustomError('Unauthenticated', 401);
-    throw ce;
+    next(ce);
 };
 
 export default authenticate;
