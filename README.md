@@ -157,6 +157,12 @@ DBを準備する手間を省略するため、データは `sqlite` に格納
 > npx ts-jest config:init
 ```
 
+## log (morgan)
+
+```
+> npm install --save morgan
+> npm install --save-dev @types/morgan
+```
 
 ---
 
