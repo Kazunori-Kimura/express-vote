@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { json, urlencoded } from 'body-parser';
+import morgan from 'morgan';
 import { AuthRouter, QuestionRouter } from './routes';
 import CustomError from './CustomError';
 
@@ -16,6 +17,7 @@ app.use(
     })
 );
 app.use(json());
+app.use(morgan('tiny'));
 
 // routerの設定
 app.use('/', AuthRouter);
